@@ -5,6 +5,7 @@
 }, 3000) // function que  sera executada entre 3 em 3 segundos
 */
 const http = require('http') // variable for http
+const neo4j = require('./scriptNeo4j.js')
 
 // get continent request
 http.get('http://www.geonames.org/childrenJSON?geonameId=6295630', (res) => {
@@ -49,8 +50,8 @@ http.get('http://www.geonames.org/childrenJSON?geonameId=6295630', (res) => {
 function treatContinent (continent) {
   for (var i = 0; i < continent.length; i++) { // For each continent, create a continent node and search the countries
     // use function for data processing in NEO4J
-    console.log(continent[i].name) // test
-    getCountry(continent[i].geonameId) // busca os países de cada continente, fazendo requisição get
+    neo4j.createNodeContinent(continent[i]) // function for creating the continent node in NEO4J
+    getCountry(continent[i].geonameId) // search the countries of each continent, making request get
   }
 }
 
@@ -86,7 +87,7 @@ function getCountry (continentID) { //
         console.log('ContinentID = ' + continentID)
         // console.log(parsedData.geonames)
         // treat data
-        treatCountry(parsedData.geonames)
+        treatCountry(parsedData.geonames, continentID)
       } catch (e) {
         console.error(e.message)
       }
@@ -96,10 +97,13 @@ function getCountry (continentID) { //
   })
 }
 // treat Country
-function treatCountry (country) {
-  for (var i = 0; i < country.length; i++) { // For each continent, create a continent node and search the countries
+function treatCountry (country, continentID) {
+  for (var i = 0; i < country.length; i++) { // For each country, create a country node
     // use function for data processing in NEO4J
-    console.log(country[i].name) // test
-    // getCountry(country[i].geonameId) // busca os países de cada continente, fazendo requisição get
+    neo4j.createNodeCountry(country[i], continentID) // function for creating the country node in NEO4J
   }
+}
+
+function createRelationshipContinent () {
+  //
 }
