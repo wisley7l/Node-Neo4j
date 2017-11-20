@@ -84,8 +84,7 @@ function getCountry (continentID) { //
     res.on('end', () => {
       try {
         const parsedData = JSON.parse(rawData)
-        console.log('ContinentID = ' + continentID)
-        // console.log(parsedData.geonames)
+        // console.log('ContinentID = ' + continentID)
         // treat data
         treatCountry(parsedData.geonames, continentID)
       } catch (e) {
@@ -102,8 +101,10 @@ function treatCountry (country, continentID) {
     // use function for data processing in NEO4J
     neo4j.createNodeCountry(country[i], continentID) // function for creating the country node in NEO4J
   }
+  RelationshipContinent() // execute function creates relationship
 }
 
-function createRelationshipContinent () {
-  //
+function RelationshipContinent () { // function that creates relationship between continent and country
+  // console.log('Relastionship')
+  neo4j.createRelationshipContinent() // execute function that creates relationship between continent and country in the NEO4J
 }

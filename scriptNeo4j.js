@@ -44,3 +44,22 @@ module.exports.createNodeCountry = function (country, continentID) { //
       }
     })
 }
+
+module.exports.createRelationshipContinent = function () {  // function that creates relationship between continent and country
+  db.cypher({
+    // Query Search the continent and country, compare the ids and create a relationship
+    query: 'MATCH (c1:Country),(c2:Continent) WHERE c1.continentID = c2.continentID MERGE (c1)-[r:BelongsTo]->(c2) RETURN r',
+    params: {
+    } },
+    function (err, results) {
+      if (err) throw err
+      var result = results[0] // takes the first position of the result vector to check the answer
+      if (!result) { // check if you found any results
+        // if it does not find it, send error message
+        console.log('Error in Relastionship Creation')
+      } else { // otherwise, send ok message
+        console.log('Created Relastionship') // send ok
+        // console.log(result)
+      }
+    })
+}
